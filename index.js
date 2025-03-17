@@ -6,6 +6,7 @@ require('dotenv').config();
 const token = process.env.DISCORD_TOKEN;
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;
+const loggingStatus = process.env.LOGGING;
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildPresences] });
@@ -36,6 +37,9 @@ client.on(Events.InteractionCreate, async interaction => {
 		try {
 			await command.execute(interaction);
 		} catch (error) {
+			if (loggingStatus == "TRUE") {
+			console.error(error);
+			}
 			console.error(error);
 			if (interaction.replied || interaction.deferred) {
 				await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
